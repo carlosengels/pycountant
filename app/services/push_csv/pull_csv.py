@@ -10,7 +10,7 @@ from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SERVICE_ACCOUNT_FILE = 'C:\\Users\engel\\accounting\\artifacts\\keys.json'
+SERVICE_ACCOUNT_FILE = '/artifacts/keys.json'
 
 # The ID
 SAMPLE_SPREADSHEET_ID = "1Oa_ql0Ft2qJHULWxVCIN9lsSdEBAEViM_Ix2Ucs40aU"
