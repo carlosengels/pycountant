@@ -3,13 +3,9 @@ import pandas as pd
 from io import StringIO
 import re
 import logging
-from pathlib import Path
+from app.core.config import ARTIFACTS_DIR
 
-
-MODULE_DIR = Path(__file__).resolve().parent
-# ARTIFACTS_DIR = MODULE_DIR / ".." / ".." / "artifacts"
-# PDF_PATH = ARTIFACTS_DIR / "20251213-statements-9847-.pdf"
-PDF_PATH = "..\\..\\..\\artifacts\\20251213-statements-9847-.pdf"
+PDF_PATH = ARTIFACTS_DIR / "20251213-statements-9847-.pdf"
 
 ACCOUNT_ACTIVITY_HEADER_CSV = "Date of Transaction,Description,$ Amount,Category,Sub-Category\n"
 DATE_FROM_PDF_REGEX = r"(\d{1,2}\/\d{1,2}\/\d{2})\s*-\s*(\d{1,2}\/\d{1,2}\/\d{2})"
@@ -73,7 +69,7 @@ def convert_account_activity_content_to_csv (list_of_activity_lines) :
     return converted_activity_line_str
 
 def write_to_csv (pdf_content_str, statement_end_date_str) :
-    filename = "..\\..\\..\\artifacts\\monthly_statement_{date_str}.csv".format(date_str=statement_end_date_str)
+    filename = ARTIFACTS_DIR  / "monthly_statement_{date_str}.csv".format(date_str=statement_end_date_str)
     df = pd.read_csv(StringIO(pdf_content_str))
     df.to_csv(filename, index=False)
     logging.info("Transaction activity saved to {filename}".format(filename=filename))
