@@ -10,7 +10,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SERVICE_ACCOUNT_FILE = ARTIFACTS_DIR / "keys.json"
 NEW_SHEET_NAME = "TEST4"
 LOCAL_CSV = ARTIFACTS_DIR / "monthly_statement_12-13-25.csv"
-SAMPLE_SPREADSHEET_ID = "1Oa_ql0Ft2qJHULWxVCIN9lsSdEBAEViM_Ix2Ucs40aU"
+SPREADSHEET_ID = "1Oa_ql0Ft2qJHULWxVCIN9lsSdEBAEViM_Ix2Ucs40aU"
 
 def csv_to_list (local_csv_path) :
   filename = local_csv_path
@@ -38,10 +38,10 @@ def main():
         }
       }
     }
-    sheet.batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body=create_sheet_body).execute()
+    sheet.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=create_sheet_body).execute()
 
     csv_data = csv_to_list(LOCAL_CSV)
-    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="TEST4!A1", valueInputOption="USER_ENTERED", body={"values":csv_data}).execute()
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID, range="TEST4!A1", valueInputOption="USER_ENTERED", body={"values":csv_data}).execute()
 
   except HttpError as err:
     print(err)
