@@ -73,12 +73,13 @@ def write_to_csv (pdf_content_str, statement_end_date_str) :
     df = pd.read_csv(StringIO(pdf_content_str))
     df.to_csv(filename, index=False)
     logging.info("Transaction activity saved to {filename}".format(filename=filename))
+    return filename.stem
 
 def main():
     logging.info("Starting main function")
     account_activity_content_csv = convert_account_activity_content_to_csv(get_account_activity_str_from_pdf())
     account_activity_complete_csv = ACCOUNT_ACTIVITY_HEADER_CSV + account_activity_content_csv
-    write_to_csv(account_activity_complete_csv, get_date_from_pdf())
+    return write_to_csv(account_activity_complete_csv, get_date_from_pdf())
 
 if __name__ == "__main__":
     logging.basicConfig(
