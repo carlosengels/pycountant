@@ -28,7 +28,6 @@ def main(file_to_upload):
   sheet = service.spreadsheets()
 
 # Create new sheet
-
   try:
     create_sheet_body = {
       "requests": {

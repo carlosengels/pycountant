@@ -5,7 +5,7 @@ import re
 import logging
 from app.core.config import ARTIFACTS_DIR
 
-PDF_PATH = ARTIFACTS_DIR / "20251213-statements-9847-.pdf"
+# PDF_PATH = ARTIFACTS_DIR / "20251213-statements-9847-.pdf"
 
 ACCOUNT_ACTIVITY_HEADER_CSV = "Date of Transaction,Description,$ Amount,Category,Sub-Category\n"
 DATE_FROM_PDF_REGEX = r"(\d{1,2}\/\d{1,2}\/\d{2})\s*-\s*(\d{1,2}\/\d{1,2}\/\d{2})"
@@ -17,10 +17,8 @@ PETS = ("Pet", "PetCo")
 SUBSCRIPTIONS = ("VIX", "Paramount", "Audible", "ESPN", "Spotify")
 CAR = ("Conoco", "Phillips 66")
 
-reader = PdfReader(PDF_PATH)
 
-
-def get_account_activity_str_from_pdf () :
+def get_account_activity_str_from_pdf (reader) :
     page = reader.pages[2]
     page_content_str = page.extract_text()
     match = re.search(ACCOUNT_ACTIVITY_FROM_PDF_REGEX,
@@ -33,7 +31,7 @@ def get_account_activity_str_from_pdf () :
         account_activity = None
     return account_activity.split("\n")
 
-def get_date_from_pdf () :
+def get_date_from_pdf (reader) :
     page = reader.pages[0]
     page_content = page.extract_text()
     match = re.search(DATE_FROM_PDF_REGEX, page_content)
@@ -75,11 +73,12 @@ def write_to_csv (pdf_content_str, statement_end_date_str) :
     logging.info("Transaction activity saved to {filename}".format(filename=filename))
     return filename.stem
 
-def main():
-    logging.info("Starting main function")
-    account_activity_content_csv = convert_account_activity_content_to_csv(get_account_activity_str_from_pdf())
+def main(pdf_to_convert):
+    reader = PdfReader(pdf_to_convert)
+    logging.info("Processing {pdf_to_convert} to PDF".format(pdf_to_convert=pdf_to_convert))
+    account_activity_content_csv = convert_account_activity_content_to_csv(get_account_activity_str_from_pdf(reader))
     account_activity_complete_csv = ACCOUNT_ACTIVITY_HEADER_CSV + account_activity_content_csv
-    return write_to_csv(account_activity_complete_csv, get_date_from_pdf())
+    return write_to_csv(account_activity_complete_csv, get_date_from_pdf(reader))
 
 if __name__ == "__main__":
     logging.basicConfig(
