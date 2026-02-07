@@ -39,6 +39,8 @@ def main(file_to_upload):
         }
       }
     }
+    logging.info("Created new sheet {}".format(file_to_upload))
+
     sheet.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=create_sheet_body).execute()
 
     local_csv = str(OUTPUT_DIR / file_to_upload) + ".csv"
