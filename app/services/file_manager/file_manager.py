@@ -14,17 +14,26 @@ def get_next_pdf():
     logging.info("Found {:n} PDFs in input directory".format(len(pdf_files)))
     return pdf_files[0]
 
+# Move all files from input and output to archive
+def archive_files():
+    ARCHIVE_DIR.mkdir(exist_ok=True, parents=True)
+    INPUT_DIR.mkdir(exist_ok=True, parents=True)
+    OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 
-def archive_file(file_path):
-    # Ensure archive directory exists
-    ARCHIVE_DIR.mkdir(exist_ok=True)
+    input_files = list(INPUT_DIR.glob("*.pdf"))
+    if input_files:
+        for file in input_files:
+            destination = ARCHIVE_DIR / f"processed_{file.name}"
+            shutil.move(str(file), str(destination))
+            logging.info(f"Archived input: {file.name}")
+    else:
+        logging.info("No input PDF files found to archive.")
 
-    # Move the file
-    destination = ARCHIVE_DIR / file_path.name
+    output_files = list(OUTPUT_DIR.glob("*.csv"))
+    if output_files:
+        for file in output_files:
+            destination = ARCHIVE_DIR / f"processed_{file.name}"
+            shutil.move(str(file), str(destination))
+            logging.info(f"Archived output: {file.name}")
 
-    # Handle duplicate filenames in archive by appending a timestamp if needed
-    if destination.exists():
-        destination = ARCHIVE_DIR / f"processed_{file_path.name}"
 
-    shutil.move(str(file_path), str(destination))
-    logging.info(f"File moved to archive: {destination}")

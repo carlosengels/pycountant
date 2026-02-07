@@ -1,9 +1,10 @@
+import logging
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pandas as pd
 from google.oauth2 import service_account
-from app.core.config import ARTIFACTS_DIR
+from app.core.config import ARTIFACTS_DIR, OUTPUT_DIR
 import sys
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -16,7 +17,7 @@ def csv_to_list (local_csv_path) :
   csv_headers = df.columns.values.tolist()
   csv_content = df.fillna('').values.tolist()
   csv_content.insert(0, csv_headers)
-  print(csv_content)
+  logging.info("CSV converted to list")
   return csv_content
 
 def main(file_to_upload):
@@ -40,12 +41,13 @@ def main(file_to_upload):
     }
     sheet.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=create_sheet_body).execute()
 
-    local_csv = str(ARTIFACTS_DIR / file_to_upload) + ".csv"
+    local_csv = str(OUTPUT_DIR / file_to_upload) + ".csv"
     csv_data = csv_to_list(local_csv)
     sheet.values().update(spreadsheetId=SPREADSHEET_ID, range=file_to_upload+"!A1", valueInputOption="USER_ENTERED", body={"values":csv_data}).execute()
+    logging.info("Pushed data to {}".format(file_to_upload))
 
   except HttpError as err:
-    print(err)
+    logging.error(err)
 
 
 if __name__ == "__main__":
