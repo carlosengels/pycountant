@@ -22,11 +22,15 @@ def csv_to_list (local_csv_path) :
 
 def main(file_to_upload):
 # Google Sheets API set-up
-  creds = None
-  creds = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-  service = build("sheets", "v4", credentials=creds)
-  sheet = service.spreadsheets()
+  try :
+      creds = None
+
+      creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+      service = build("sheets", "v4", credentials=creds)
+      sheet = service.spreadsheets()
+  except FileNotFoundError as err:
+     logging.error(f"GCP key needed. Place in keys.json in {ARTIFACTS_DIR}")
+
 
 # Create new sheet
   try:
