@@ -12,3 +12,4 @@ LOG_DIR = ARTIFACTS_DIR / "logs"
 LOG_FILE_PATH = LOG_DIR / "pycountant.log"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE_PATH.touch(exist_ok=True)
+

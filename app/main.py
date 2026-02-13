@@ -1,27 +1,36 @@
+from fastapi import FastAPI
+import uvicorn
 import logging
+from contextlib import asynccontextmanager
+from  app.core.config import LOG_FILE_PATH, INPUT_DIR, ARCHIVE_DIR, OUTPUT_DIR
+from app.core.logger import setup_logger
+from app.api.v1.pipeline_router import router as pipeline_router
 
-from app.services.file_manager.file_manager import get_next_pdf, archive_files
-from services.pdf_to_csv import main as pdf_to_csv
-from services.push_csv import main as push_csv
-from  app.core.config import LOG_FILE_PATH
+setup_logger()
 
-def run_pipeline():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- STARTUP: Runs before the server starts taking requests ---
+    INPUT_DIR.mkdir(parents=True, exist_ok=True)
+    ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    logging.info("Pycountant lifespan started: Directories verified.")
+    
+    yield  # The app is now "running" here
+    
+    # --- SHUTDOWN: Runs right before the server stops ---
+    logging.info("Pycountant lifespan ending.")
 
-    pdf_path = get_next_pdf()
+app = FastAPI(title="Pycountant API")
 
-    generated_csv_path = pdf_to_csv(pdf_to_convert=pdf_path)
-    if generated_csv_path:
-        push_csv(file_to_upload=generated_csv_path)
-
-    archive_files()
+app.include_router(pipeline_router, prefix="/api/v1", tags=["Accounting"])
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,  # Set minimum log level
-        format="%(asctime)s %(levelname)s %(message)s",
-        handlers=[
-            logging.FileHandler(LOG_FILE_PATH),  # Saves to file
-            logging.StreamHandler()  # Also prints to your terminal
-        ]
+
+
+    uvicorn.run(
+        "main:app", 
+        host="127.0.0.1", 
+        port=8000, 
+        reload=True  # Auto-restarts when you save code
     )
-    run_pipeline()
