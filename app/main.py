@@ -3,7 +3,7 @@ from fastapi import FastAPI
 import uvicorn
 from contextlib import asynccontextmanager
 from  app.core.config import LOG_FILE_PATH, INPUT_DIR, ARCHIVE_DIR, OUTPUT_DIR
-from app.api.pipeline_router import router as pipeline_router
+from app.api.v1.pipeline_router import router as pipeline_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
