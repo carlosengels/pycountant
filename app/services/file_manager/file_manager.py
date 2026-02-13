@@ -2,16 +2,19 @@ from app.core.config import INPUT_DIR, OUTPUT_DIR, ARCHIVE_DIR
 import shutil
 import logging
 
-def get_next_pdf():
-    # Find all files ending in .pdf
+def get_all_pdf():
     pdf_files = list(INPUT_DIR.glob("*.pdf"))
-
+    logging.info("Found {:n} PDFs in input directory".format(len(pdf_files)))
     if not pdf_files:
         logging.warning("No PDFs found in input directory")
         return None
+    
+    return pdf_files
 
+def get_next_pdf():
+    # Find all files ending in .pdf
+    pdf_files = get_all_pdf()
     # Return the first one found
-    logging.info("Found {:n} PDFs in input directory".format(len(pdf_files)))
     return pdf_files[0]
 
 # Move all files from input and output to archive

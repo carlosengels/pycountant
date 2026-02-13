@@ -10,3 +10,4 @@ def setup_logger() :
             logging.StreamHandler() # Print to terminal
         ]
     )
+

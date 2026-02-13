@@ -1,7 +1,5 @@
-import pytest
 from unittest.mock import patch
 from fastapi.testclient import TestClient
-# from app.api.v1.pipeline_router import trigger_pipeline
 from app.main import app
 
 
