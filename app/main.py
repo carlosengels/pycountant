@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 import logging
 from contextlib import asynccontextmanager
-from  app.core.config import LOG_FILE_PATH, INPUT_DIR, ARCHIVE_DIR, OUTPUT_DIR
+from  app.core.config import INPUT_DIR, ARCHIVE_DIR, OUTPUT_DIR
 from app.core.logger import setup_logger
 from app.api.v1.pipeline_router import router as pipeline_router
 

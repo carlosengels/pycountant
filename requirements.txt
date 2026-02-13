@@ -3,3 +3,5 @@ google_api_python_client==2.190.0
 pandas==3.0.0
 protobuf==6.33.5
 pypdf==6.7.0
+pytest==9.0.2
+uvicorn==0.40.0
